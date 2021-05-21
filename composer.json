@@ -1,0 +1,17 @@
+{
+    "name": "vendimia/routing",
+    "description": "HTTP routes management",
+    "keywords": ["routing"],
+    "version": "0.1",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "php": ">=8.0"
+        "vendimia/data-container": "*",
+        "vendimia/http": "*",
+    },
+    "autoload": {
+        "psr-4": {
+            "Vendimia\\Routing\\": "src"
+        }
+    }
+}
