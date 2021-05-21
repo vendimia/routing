@@ -5,9 +5,9 @@
     "version": "0.1",
     "license": "GPL-3.0-or-later",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
         "vendimia/data-container": "*",
-        "vendimia/http": "*",
+        "vendimia/http": "*"
     },
     "autoload": {
         "psr-4": {
