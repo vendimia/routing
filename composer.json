@@ -2,11 +2,11 @@
     "name": "vendimia/routing",
     "description": "HTTP routes management",
     "keywords": ["routing"],
-    "version": "0.1",
+    "version": "0.2",
     "license": "GPL-3.0-or-later",
     "require": {
         "php": ">=8.0",
-        "ext-mbstring": "*",       
+        "ext-mbstring": "*",
         "vendimia/data-container": "*",
         "vendimia/http": "*"
     },
