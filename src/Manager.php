@@ -69,7 +69,7 @@ class Manager
         $http_method = $request->getMethod();
         $hostname = $request->getHeaderLine('Host');
         $ajax = $request->getHeaderLine('X-Requested-With');
-        $path = trim($request->getRequestTarget(), ' /');
+        $path = trim($request->getUri()->getPath(), ' /');
 
         $matched_rule = false;
 
