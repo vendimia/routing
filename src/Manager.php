@@ -64,12 +64,12 @@ class Manager
     /**
      * Match a request against the rule list
      */
-    public function match(Request $request)
+    public function match(Request $request): ?MatchedRoute
     {
         $http_method = $request->getMethod();
         $hostname = $request->getHeaderLine('Host');
         $ajax = $request->getHeaderLine('X-Requested-With');
-        $path = trim($request->getUri()->getPath(), ' /');
+        $path = trim(urldecode($request->getUri()->getPath()), ' /');
 
         $matched_rule = false;
 
@@ -85,7 +85,7 @@ class Manager
                 continue;
             }
 
-            if (preg_match($rule['regexp'], $path, $args,  PREG_UNMATCHED_AS_NULL)) {
+            if (preg_match($rule['regexp'], $path, $args, PREG_UNMATCHED_AS_NULL)) {
                 // Good
 
                 // Nos deshacemos de los $args de índice no numéricos
