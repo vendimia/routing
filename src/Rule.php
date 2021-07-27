@@ -294,7 +294,7 @@ class Rule
      */
     public static function path($path = null, $target = null): self
     {
-        return (new self)->setPath($path);
+        return (new self)->setPath($path)->setTarget($target);
     }
 
     /**
