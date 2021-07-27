@@ -113,6 +113,10 @@ class Rule
         } elseif ($target instanceof Closure) {
             // Es un closure
             $this->callable($target);
+        } else {
+            // Lo que debe quedar es un string. Asumimos que es un controller
+            // con el método 'default'
+            $this->controller($target);
         }
 
         return $this;
