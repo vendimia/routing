@@ -297,6 +297,15 @@ class Rule
         return (new self)->setPath($path)->setTarget($target);
     }
 
+    /** 
+     * Returns a new HTTP rule without method, with an empty path, for the
+     * default rule
+     */
+    public static function default($target = null): self
+    {
+        return (new self)->method('GET')->setPath('')->setTarget($target);
+    }
+
     /**
      * Returns a new HTTP GET rule
      *
