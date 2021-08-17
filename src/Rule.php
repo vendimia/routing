@@ -93,7 +93,7 @@ class Rule
      * Returns the route path
      *
      * @author Oliver Etchebarne <yo@drmad.org>
-     * 
+     *
      */
     public function getPath(): string
     {
@@ -105,8 +105,14 @@ class Rule
      *
      * @author Oliver Etchebarne <yo@drmad.org>
      */
-    public function setTarget($target = null): self
+    public function setTarget($target): self
     {
+        // Esto es sólo cuando no se añade un target en algún método estático.
+        // Simplemente una facilidad para no repetirla en cada método.
+        if (is_null($target)) {
+            return $this;
+        }
+
         if (is_array($target)) {
             // Es un controller
             $this->controller(...$target);
@@ -175,7 +181,7 @@ class Rule
 
     /**
      * Sets the target to a callable function or method
-     * 
+     *
      * @author Oliver Etchebarne <yo@drmad.org>
      */
     public function callable(Callable $callable): self
@@ -186,7 +192,7 @@ class Rule
         return $this;
     }
 
-    /** 
+    /**
      * Sets the target to a view
      */
     public function view(string $string): self
@@ -297,7 +303,7 @@ class Rule
         return (new self)->setPath($path)->setTarget($target);
     }
 
-    /** 
+    /**
      * Returns a new HTTP rule without method, with an empty path, for the
      * default rule
      */
