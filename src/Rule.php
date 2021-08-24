@@ -2,6 +2,8 @@
 namespace Vendimia\Routing;
 
 use Closure;
+use InvalidArgumentException;
+use Vendimia\Interface\Path\ResourceLocatorInterface;
 
 /**
  * Routing rule definition.
@@ -18,6 +20,9 @@ class Rule
     // Regexp for PHP identifier, from
     // https://www.php.net/manual/en/language.variables.basics.php
     private const PHP_IDENTIFIER = '[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*';
+
+    /** Optional ResourceLocatorInterface implementation */
+    private static ?ResourceLocatorInterface $resource_locator = null;
 
     private $rule = [
         // Allowed request methods. Default any.
@@ -215,6 +220,16 @@ class Rule
                 $this->included_rules[] = $rule->combine($this);
             }
         }
+        if (is_string($rules)) {
+            if (self::$resource_locator) {
+                $source = self::$resource_locator($rules);
+                if (is_null($source)) {
+                    throw new InvalidArgumentException("Rule source '$rules' not found");
+                }
+            } else {
+                $source = require $rules;
+            }
+        }
 
         return $this;
     }
@@ -291,6 +306,16 @@ class Rule
         }
 
         $this->rule['regexp'] = "%^{$path}$%u";
+    }
+
+    /**
+     * Sets the ResourceLocator object
+     */
+    public static function setResourceLocator(
+        ResourceLocatorInterface $resource_locator
+    )
+    {
+        self::$resource_locator = $resource_locator;
     }
 
     /**
