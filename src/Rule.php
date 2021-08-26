@@ -106,6 +106,14 @@ class Rule
     }
 
     /**
+     * Return the rule data
+     */
+    public function getRule(): array 
+    {
+        return $this->rule;
+    }
+
+    /**
      * Sets a target for this rule.
      *
      * @author Oliver Etchebarne <yo@drmad.org>
@@ -213,40 +221,43 @@ class Rule
      *
      * @author Oliver Etchebarne <yo@drmad.org>
      */
-    public function include($rules): self
+    public function include(string|array $rules): self
     {
-        if (is_array($rules)) {
-            foreach ($rules as $rule) {
-                $this->included_rules[] = $rule->combine($this);
-            }
-        }
+        // Si es string, es un fichero.
         if (is_string($rules)) {
+            $source = $rules;
+
+            // Si hay definido un resource locator, lo usamos. De lo contrario,
+            // el string apunta directo a un fichero.
             if (self::$resource_locator) {
-                $source = self::$resource_locator($rules);
+                $source = self::$resource_locator->find($rules);
                 if (is_null($source)) {
                     throw new InvalidArgumentException("Rule source '$rules' not found");
                 }
-            } else {
-                $source = require $rules;
             }
+            $rules = require $source;
         }
+
+        /*
+        foreach ($rules as $rule) {
+            $r = $this->included_rules[] = $rule->prependPathFromRule($this);
+            var_dump($r->getPath());
+        }*/
+
+        // Grabamos las reglas sin modificar
+        $this->included_rules = array_merge($this->included_rules, $rules);
 
         return $this;
     }
 
     /**
-     * Merges this rule with another,
+     * Prepends a rule path to this path,
      *
      * @author Oliver Etchebarne <yo@drmad.org>
      */
-    public function combine(Rule $rule): self
+    public function prependPathFromRule(Rule $rule): self
     {
         $this->rule['path'] = trim($rule->getPath() . '/' . $this->rule['path'], '/');
-
-        // Tambien combinamos las rutas incluidas
-        foreach ($this->included_rules as $included_rule) {
-            $included_rule->combine($rule);
-        }
 
         return $this;
     }
@@ -258,11 +269,13 @@ class Rule
      */
     public function getProcessedData(): array
     {
-        // Las rutas que incluyen otras no son parte de la tabla de ruteo
+        // Las reglas que incluyen otras no son parte de la tabla de ruteo, solo
+        // retornamos las reglas incluidas, ya procesadas
         if ($this->included_rules) {
             $return = [];
             foreach ($this->included_rules as $rule) {
-                $return[] = $rule->getProcessedData()[0]; // Removemos el array
+                $rule->prependPathFromRule($this);
+                $return = array_merge($return, $rule->getProcessedData()); // Removemos el array
             }
             return $return;
         } else {
