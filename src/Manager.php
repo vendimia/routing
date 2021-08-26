@@ -22,7 +22,7 @@ class Manager
     public function __construct(array|string $rules)
     {
         if (is_string($rules)) {
-            $rules = include $rules;
+            $rules = require $rules;
         }
 
         foreach ($rules as $raw_rule) {
