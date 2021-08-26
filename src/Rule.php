@@ -150,7 +150,7 @@ class Rule
      *
      * @author Oliver Etchebarne <yo@drmad.org>
      */
-    public function name(str $name): self
+    public function name(string $name): self
     {
         $this->rule['name'] = $name;
 
