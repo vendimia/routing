@@ -66,7 +66,7 @@ class Rule
      */
     public function method(string ...$methods)
     {
-        $this->rule['methods'] = $methods;
+        $this->rule['methods'] = array_map('strtoupper', $methods);
         return $this;
     }
 
