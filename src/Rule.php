@@ -296,7 +296,7 @@ class Rule
         // Reemplazamos la variables por subpatrones
         $offset = 0;
         $result = preg_match_all(
-            '/\{(\*?' . self::PHP_IDENTIFIER . '?)\}/',
+            '/\{(\*|\*?' . self::PHP_IDENTIFIER . '?)\}/',
             $path,
             $matches,
             PREG_SET_ORDER | PREG_OFFSET_CAPTURE
@@ -308,9 +308,14 @@ class Rule
                 $variable = $match[1][0];
 
                 if ($variable[0] == '*') {
-                    // Esta es una variable catch-all
                     $variable = substr($variable, 1);
-                    $preg_subpat = "(?<{$variable}>.+?)";
+                    if ($variable) {
+                        // Esta es una variable catch-all
+                        $preg_subpat = "(?<{$variable}>.+?)";
+                    } else {
+                        // Si no hay variable, es un paréntesis que no captura
+                        $preg_subpat = "(?:.+?)";
+                    }
                 } else {
                     $preg_subpat = "(?<{$variable}>[^/]+?)";
                 }
