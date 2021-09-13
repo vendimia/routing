@@ -108,7 +108,7 @@ class Rule
     /**
      * Return the rule data
      */
-    public function getRule(): array 
+    public function getRule(): array
     {
         return $this->rule;
     }
@@ -419,5 +419,15 @@ class Rule
     public static function delete($path = null, $target = null): self
     {
         return (new self)->method('DELETE')->setPath($path)->setTarget($target);
+    }
+
+    /**
+     * Returns a new HTTP OPTIONS rule
+     *
+     * @author Oliver Etchebarne <yo@drmad.org>
+     */
+    public static function options($path = null, $target = null): self
+    {
+        return (new self)->method('OPTIONS')->setPath($path)->setTarget($target);
     }
 }
