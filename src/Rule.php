@@ -1,9 +1,13 @@
 <?php
 namespace Vendimia\Routing;
 
-use Closure;
-use InvalidArgumentException;
+use Vendimia\Routing\MethodRoute\MethodRouteInterface;
 use Vendimia\Interface\Path\ResourceLocatorInterface;
+
+use Closure;
+use ReflectionClass;
+use ReflectionAttribute;
+use InvalidArgumentException;
 
 /**
  * Routing rule definition.
@@ -15,7 +19,6 @@ class Rule
     const TARGET_VIEW = 'view';
     const TARGET_CONTROLLER = 'controller';
     const TARGET_CALLABLE = 'callable';
-    const TARGET_CLASS = 'class';
 
     // Regexp for PHP identifier, from
     // https://www.php.net/manual/en/language.variables.basics.php
@@ -50,7 +53,7 @@ class Rule
         'property' => null,
 
         // Target type: view, callable, class
-        'target_type' => self::TARGET_CLASS,
+        'target_type' => self::TARGET_CONTROLLER,
 
         // Extra arguments to the controller/callable
         'args' => [],
@@ -58,6 +61,14 @@ class Rule
 
     // Include()d rules
     private $included_rules = [];
+
+    /**
+     * Create a rule specifying the rule details
+     */
+    public function __construct(...$details)
+    {
+        $this->rule = array_merge($this->rule, $details);
+    }
 
     /**
      * Sets the allowed HTTP methods for this rule.
@@ -245,6 +256,30 @@ class Rule
         }*/
 
         // Grabamos las reglas sin modificar
+        $this->included_rules = array_merge($this->included_rules, $rules);
+
+        return $this;
+    }
+
+    /**
+     * Include routing rules from this class' method attributes.
+     */
+    public function includeFromClass($class_name): self
+    {
+        $rules = [];
+        $rc = new ReflectionClass($class_name);
+        foreach ($rc->getMethods() as $rm) {
+            $attrs = $rm->getAttributes(
+                MethodRouteInterface::class,
+                ReflectionAttribute::IS_INSTANCEOF
+            );
+
+            foreach ($attrs as $attr) {
+                $rule = $attr->newInstance();
+                $rule->setTarget($rm->class, $rm->name);
+            }
+            $rules[] = $rule->getRule();
+        }
         $this->included_rules = array_merge($this->included_rules, $rules);
 
         return $this;
