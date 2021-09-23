@@ -18,7 +18,6 @@ abstract class MethodRouteAbstract implements MethodRouteInterface
 
     public function setTarget(...$args)
     {
-        error_log(var_export($args, true));
         $this->target = $args;
     }
 
