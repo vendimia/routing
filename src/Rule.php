@@ -274,6 +274,11 @@ class Rule
                 ReflectionAttribute::IS_INSTANCEOF
             );
 
+            // Si no tiene atributos, ignoramos el método
+            if (!$attrs) {
+                continue;
+            }
+
             foreach ($attrs as $attr) {
                 $rule = $attr->newInstance();
                 $rule->setTarget($rm->class, $rm->name);
