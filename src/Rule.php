@@ -334,13 +334,14 @@ class Rule
         $path = $this->rule['path'];
 
         // Reemplazamos la variables por subpatrones
-        $offset = 0;
         $result = preg_match_all(
             '/\{(\*|\*?' . self::PHP_IDENTIFIER . '?)\}/',
             $path,
             $matches,
             PREG_SET_ORDER | PREG_OFFSET_CAPTURE
         );
+
+        $replace = [];
 
         if ($result) {
             foreach ($matches as $match) {
@@ -360,26 +361,11 @@ class Rule
                     $preg_subpat = "(?<{$variable}>[^/]+?)";
                 }
 
-
-                // $match[0] tiene todo el match completo, incluyendo los {}
-                $start = $match[0][1] + $offset;
-                $length = mb_strlen($match[0][0]);
-
-                $path = mb_substr($path, 0, $start) .
-                    $preg_subpat .
-                    mb_substr($path, $start + $length);
-
-                // PREG_OFFSET_CAPTURE devuelve el offset _en bytes_, no en
-                // caracteres, a pesar que estamos usando el modificador Unicode.
-                // Esta línea compensa por los bytes no contados en el offset.
-                $offset -= strlen($preg_subpat) - mb_strlen($preg_subpat);
-
-                // Añadimos la diferencia entre la variable, y el patron regexp.
-                $offset += mb_strlen($preg_subpat) - mb_strlen($match[0][0]);
+                $replace[$match[0][0]] = $preg_subpat;
             }
         }
 
-        $this->rule['regexp'] = "%^{$path}$%u";
+        $this->rule['regexp'] = '%^'. strtr($path, $replace) . '$%u';
     }
 
     /**
