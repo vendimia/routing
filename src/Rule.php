@@ -282,8 +282,8 @@ class Rule
             foreach ($attrs as $attr) {
                 $rule = $attr->newInstance();
                 $rule->setTarget($rm->class, $rm->name);
+                $rules[] = $rule->getRule();
             }
-            $rules[] = $rule->getRule();
         }
         $this->included_rules = array_merge($this->included_rules, $rules);
 
