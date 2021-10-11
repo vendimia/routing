@@ -1,7 +1,7 @@
 <?php
 namespace Vendimia\Routing;
 
-use Vendimia\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Raw routing rules manager.
@@ -64,7 +64,7 @@ class Manager
     /**
      * Match a request against the rule list
      */
-    public function match(Request $request): ?MatchedRoute
+    public function match(ServerRequestInterface $request): ?MatchedRoute
     {
         $http_method = $request->getMethod();
         $hostname = $request->getHeaderLine('Host');
