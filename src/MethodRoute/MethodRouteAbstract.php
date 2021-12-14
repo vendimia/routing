@@ -9,7 +9,7 @@ abstract class MethodRouteAbstract implements MethodRouteInterface
     private $target = [];
 
     public function __construct(
-        private string $path,
+        private string $path = '',
         private ?string $name = null,
     )
     {
