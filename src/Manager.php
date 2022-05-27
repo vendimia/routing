@@ -19,7 +19,14 @@ class Manager
      *
      * @author Oliver Etchebarne <yo@drmad.org>
      */
-    public function __construct(array|string $rules)
+    public function __construct()
+    {
+    }
+
+    /**
+     * Sets the rules from a file or an array
+     */
+    public function setRules(array|string $rules)
     {
         if (is_string($rules)) {
             $rules = require $rules;
@@ -39,6 +46,9 @@ class Manager
         }
     }
 
+    /**
+     * Return the rules
+     */
     public function getRules()
     {
         return $this->rules;
