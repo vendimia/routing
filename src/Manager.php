@@ -104,6 +104,7 @@ class Manager
 
                 return new MatchedRoute(
                     name: $rule['name'],
+                    rule: $rule,
                     target_type: $rule['target_type'],
                     target:
                         is_object($rule['target']) ?
