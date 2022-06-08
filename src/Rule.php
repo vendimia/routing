@@ -379,7 +379,17 @@ class Rule
     }
 
     /**
-     * Returns a new HTTP rule without method
+     * Returns a new HTTP rule accepting all methods
+     *
+     * @author Oliver Etchebarne <yo@drmad.org>
+     */
+    public static function any($path = null, $target = null): self
+    {
+        return (new self)->setPath($path)->setTarget($target);
+    }
+
+    /**
+     * Alias of self::any
      *
      * @author Oliver Etchebarne <yo@drmad.org>
      */
