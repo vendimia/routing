@@ -15,23 +15,10 @@ class Manager
     private array $default_rule = [];
 
     /**
-     * Read rules from a file, o from an array
-     *
-     * @author Oliver Etchebarne <yo@drmad.org>
+     * Sets the rules from an array pf Rule objects
      */
-    public function __construct()
+    public function setRules(array $rules)
     {
-    }
-
-    /**
-     * Sets the rules from a file or an array
-     */
-    public function setRules(array|string $rules)
-    {
-        if (is_string($rules)) {
-            $rules = require $rules;
-        }
-
         foreach ($rules as $raw_rule) {
             foreach ($raw_rule->getProcessedData() as $rule) {
                 if ($rule['property']) {
@@ -79,9 +66,7 @@ class Manager
         $http_method = $request->getMethod();
         $hostname = $request->getHeaderLine('Host');
         $ajax = $request->getHeaderLine('X-Requested-With');
-        $path = trim(urldecode($request->getUri()->getPath()), ' /');
-
-        $matched_rule = false;
+        $path = trim($request->getUri()->getDecodedPath(), ' /');
 
         // Analizamos las rutas
         foreach ($this->rules as $rule) {
