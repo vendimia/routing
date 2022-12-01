@@ -87,14 +87,20 @@ class Manager
                 $args = array_filter($args, 'is_string', ARRAY_FILTER_USE_KEY)
                     + $rule['args'];
 
+
+                $target = $rule['target'];
+
+                // Si el target es un string,y hay variables para reemplazar,
+                // las reemplazamos
+                if (is_string($rule['target']) && $args ) {
+                    $target = $this->replaceVariables($rule['target'], $args);
+                }
+
                 return new MatchedRoute(
                     name: $rule['name'],
                     rule: $rule,
                     target_type: $rule['target_type'],
-                    target:
-                        is_object($rule['target']) ?
-                        $rule['target'] :
-                        $this->replaceVariables($rule['target'], $args),
+                    target:$target,
                     args: $args,
                 );
             }
