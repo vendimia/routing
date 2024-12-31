@@ -24,7 +24,7 @@ abstract class MethodRouteAbstract implements MethodRouteInterface
     public function getRule()
     {
         return new Rule(
-            methods: [$this->getHttpMethod()],
+            methods: $this->getHttpMethods(),
             path: $this->path,
             name: $this->name,
             target: $this->target,

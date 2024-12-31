@@ -6,8 +6,8 @@ use Attribute;
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_METHOD)]
 class Patch extends MethodRouteAbstract
 {
-    public function getHttpMethod()
+    public function getHttpMethods(): ?array
     {
-        return 'PATCH';
+        return ['PATCH'];
     }
 }

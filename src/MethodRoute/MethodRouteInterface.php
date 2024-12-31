@@ -6,7 +6,7 @@ interface MethodRouteInterface
     /**
      * Returns this MethodRoute HTTP Method
      */
-    public function getHttpMethod();
+    public function getHttpMethods(): ?array;
 
     /**
      * Returns a Rule built with this method's information.
